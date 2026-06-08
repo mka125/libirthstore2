@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibirthStore - Product Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .header { background: white; padding: 15px 20px; border-bottom: 1px solid #e0e0e0; }
+        .header-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .logo { font-size: 24px; font-weight: 800; color: #1a1a1a; text-decoration: none; }
+        .logo span { color: #FF5722; }
+        .back-home { background: #FF5722; color: white; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13px; }
+        .product-container { max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .product-image img { width: 100%; max-width: 400px; object-fit: contain; }
+        .product-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        .product-brand { color: #FF5722; font-weight: 600; margin-bottom: 15px; font-size: 16px; }
+        .price { font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 20px 0; }
+        .old-price { font-size: 18px; color: #999; text-decoration: line-through; margin-left: 10px; }
+        .discount-badge { background: #4CAF50; color: white; padding: 5px 10px; border-radius: 20px; font-size: 14px; margin-left: 10px; }
+        .quantity { display: flex; align-items: center; gap: 15px; margin: 20px 0; }
+        .quantity button { width: 40px; height: 40px; border: 1px solid #ddd; background: white; font-size: 20px; cursor: pointer; border-radius: 8px; }
+        .quantity span { font-size: 18px; font-weight: 600; min-width: 50px; text-align: center; }
+        .order-btn { background: #25D366; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .order-btn:hover { background: #1da851; }
+        .back-btn { display: inline-block; margin-top: 20px; color: #FF5722; text-decoration: none; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: white; padding: 12px 24px; border-radius: 40px; z-index: 1000; animation: fadeOut 3s ease; }
+        @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+        @media (max-width: 768px) { .product-container { grid-template-columns: 1fr; } }
+        .loading { grid-column: span 2; text-align: center; padding: 50px; font-size: 18px; color: #666; }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Libirth<span>Store</span></a>
+        <a href="index.html" class="back-home">← Back to Home</a>
+    </div>
+</header>
+
+<div id="productContainer" class="product-container">
+    <div class="loading">Loading product details...</div>
+</div>
+
+<script>
+    const SUPABASE_URL = "https://nizvvikxtfatexfttgew.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_OsbY_8K9vEQOU-jmQ-vk5w_KlQIH44S";
+
+    // ========== COMPLETE PRODUCTS - SAB ID YAHAN HAIN (1 se 612 tak) ==========
+    const allProducts = {
+        // Personal Care (1-4)
+        1: { name: "Eyebrow And Facial Hair Remover Trimmer", brand: "PHILIPS", price: 999, oldPrice: 3330, discount: 70, image: "https://placehold.co/400x400/fff/FF5722?text=Trimmer" },
+        2: { name: "KM-6330 3 in 1 Grooming Kit", brand: "KM", price: 1749, oldPrice: 3015, discount: 42, image: "https://placehold.co/400x400/fff/FF5722?text=Grooming" },
+        3: { name: "Dinglong Professional Beard Trimmer", brand: "DINGLONG", price: 2949, oldPrice: 3985, discount: 26, image: "https://placehold.co/400x400/fff/FF5722?text=Beard" },
+        4: { name: "Hair Styling Comb Straightener Brush", brand: "STYLEPRO", price: 1149, oldPrice: 3481, discount: 67, image: "https://placehold.co/400x400/fff/FF5722?text=Straightener" },
+        
+        // Earbuds (5-8)
+        5: { name: "Soundpeats Q3 Pro ANC Wireless Earbuds", brand: "SOUNDPEATS", price: 3999, oldPrice: 6347, discount: 37, image: "https://placehold.co/400x400/fff/FF5722?text=Soundpeats" },
+        6: { name: "M04 TWS Wireless Bluetooth Earbuds", brand: "M04", price: 949, oldPrice: 2965, discount: 68, image: "https://placehold.co/400x400/fff/FF5722?text=M04" },
+        7: { name: "Zero Gravity Earbuds", brand: "ZERO", price: 3149, oldPrice: 0, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Zero" },
+        8: { name: "Airox E9 Wireless Earbuds", brand: "AIROX", price: 2099, oldPrice: 11660, discount: 82, image: "https://placehold.co/400x400/fff/FF5722?text=Airox" },
+        
+        // Mobiles (9-16)
+        9: { name: "Tecno Camon 50 Ultra 5G", brand: "TECNO", price: 119999, oldPrice: 0, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Tecno" },
+        10: { name: "Nothing Phone 4a Pro", brand: "NOTHING", price: 238999, oldPrice: 243876, discount: 2, image: "https://placehold.co/400x400/fff/FF5722?text=Nothing" },
+        11: { name: "Honor X8d", brand: "HONOR", price: 64499, oldPrice: 70107, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=Honor" },
+        12: { name: "Samsung Galaxy S25 FE", brand: "SAMSUNG", price: 182999, oldPrice: 220480, discount: 17, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung" },
+        13: { name: "Samsung Galaxy A07", brand: "SAMSUNG", price: 27499, oldPrice: 34809, discount: 21, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung" },
+        14: { name: "Tecno Camon 40 Pro", brand: "TECNO", price: 63999, oldPrice: 80909, discount: 21, image: "https://placehold.co/400x400/fff/FF5722?text=Tecno" },
+        15: { name: "Infinix Note 60 Edge 5G", brand: "INFINIX", price: 73199, oldPrice: 87140, discount: 16, image: "https://placehold.co/400x400/fff/FF5722?text=Infinix" },
+        16: { name: "Xiaomi 17 Ultra", brand: "XIAOMI", price: 459999, oldPrice: 479166, discount: 4, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi" },
+        
+        // Xiaomi Deals (17-21)
+        17: { name: "Xiaomi Sound Party Bluetooth Speaker", brand: "XIAOMI", price: 21999, oldPrice: 28570, discount: 23, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi" },
+        18: { name: "Xiaomi 65W GaN Super Fast Charger", brand: "XIAOMI", price: 5149, oldPrice: 6865, discount: 25, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi" },
+        19: { name: "Xiaomi 80W Wireless Charging Stand", brand: "XIAOMI", price: 18999, oldPrice: 27940, discount: 32, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi" },
+        20: { name: "Mijia Smart Air Purifier 6", brand: "MIJIA", price: 72999, oldPrice: 81110, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi" },
+        21: { name: "Xiaomi 67W Power Bank 20000mAh", brand: "XIAOMI", price: 11099, oldPrice: 17900, discount: 38, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi" },
+        
+        // ========== SMART WATCHES (IDs 101-112) ==========
+        101: { name: "Apple Watch Ultra 2", brand: "Apple", price: 425000, oldPrice: 447368, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=Apple+Ultra" },
+        102: { name: "Apple Watch Series 9", brand: "Apple", price: 315000, oldPrice: 342391, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=Apple+Series+9" },
+        103: { name: "Samsung Galaxy Watch 6 Classic", brand: "Samsung", price: 145000, oldPrice: 161111, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung+Watch+6" },
+        104: { name: "Samsung Galaxy Watch FE", brand: "Samsung", price: 89000, oldPrice: 98888, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung+Watch+FE" },
+        105: { name: "Garmin Fenix 7X", brand: "Garmin", price: 385000, oldPrice: 385000, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Garmin+Fenix" },
+        106: { name: "Garmin Venu 3", brand: "Garmin", price: 210000, oldPrice: 210000, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Garmin+Venu" },
+        107: { name: "Amazfit GTR 4", brand: "Amazfit", price: 55000, oldPrice: 64705, discount: 15, image: "https://placehold.co/400x400/fff/FF5722?text=Amazfit+GTR" },
+        108: { name: "Amazfit Bip 5", brand: "Amazfit", price: 32000, oldPrice: 34782, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=Amazfit+Bip" },
+        109: { name: "Xiaomi Watch S3", brand: "Xiaomi", price: 42000, oldPrice: 47727, discount: 12, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi+S3" },
+        110: { name: "Xiaomi Redmi Watch 4", brand: "Xiaomi", price: 18000, oldPrice: 18947, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=Redmi+Watch" },
+        111: { name: "Huawei Watch GT 4", brand: "Huawei", price: 68000, oldPrice: 68000, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Huawei+GT" },
+        112: { name: "OnePlus Watch 2", brand: "OnePlus", price: 75000, oldPrice: 81521, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=OnePlus+Watch" },
+        
+        // ========== POWER BANKS (IDs 301-310) - NEW ADDED ==========
+        301: { name: "Anker PowerCore 20K", brand: "Anker", price: 12500, oldPrice: 13888, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Anker+20K" },
+        302: { name: "Samsung 25W PD Power Bank", brand: "Samsung", price: 8900, oldPrice: 9368, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung+25W" },
+        303: { name: "Xiaomi 20000mAh Mi 3", brand: "Xiaomi", price: 6500, oldPrice: 7386, discount: 12, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi+20K" },
+        304: { name: "Oraimo 10000mAh Magnetic", brand: "Oraimo", price: 5500, oldPrice: 6470, discount: 15, image: "https://placehold.co/400x400/fff/FF5722?text=Oraimo+Magnetic" },
+        305: { name: "Anker Prime 250W", brand: "Anker", price: 42000, oldPrice: 42000, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Anker+Prime" },
+        306: { name: "Baseus 65W Laptop Power Bank", brand: "Baseus", price: 18500, oldPrice: 20108, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=Baseus+65W" },
+        307: { name: "Rapoo 30000mAh", brand: "Rapoo", price: 4200, oldPrice: 4421, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=Rapoo+30K" },
+        308: { name: "Xiaomi 50000mAh Monster", brand: "Xiaomi", price: 18900, oldPrice: 22235, discount: 15, image: "https://placehold.co/400x400/fff/FF5722?text=Xiaomi+50K" },
+        309: { name: "Anker Nano Power Bank", brand: "Anker", price: 8900, oldPrice: 10113, discount: 12, image: "https://placehold.co/400x400/fff/FF5722?text=Anker+Nano" },
+        310: { name: "Samsung Wireless Power Bank", brand: "Samsung", price: 11500, oldPrice: 12777, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung+Wireless" },
+        
+        // Tablets (301-302) - Note: Tablets ki IDs 301,302 hain, Power Banks ki bhi 301-310
+        // Isliye Tablets ki IDs change karni padegi nahi to conflict hoga
+        // Tablets ke liye IDs 701,702 use kar raha hoon
+        701: { name: "iPad Pro 12.9 M4", brand: "APPLE", price: 489000, oldPrice: 514736, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=iPad" },
+        702: { name: "Samsung Galaxy Tab S9 Ultra", brand: "SAMSUNG", price: 419000, oldPrice: 465555, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung+Tab" },
+        
+        // Headphones (401-404)
+        401: { name: "Sony WH-1000XM5 Noise Cancelling Headphones", brand: "SONY", price: 45900, oldPrice: 51000, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Sony" },
+        402: { name: "Bose QuietComfort 45 Headphones", brand: "BOSE", price: 38900, oldPrice: 42283, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=Bose" },
+        403: { name: "Apple AirPods Max Over-Ear Headphones", brand: "APPLE", price: 159900, oldPrice: 168316, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=AirPods" },
+        404: { name: "Sennheiser HD 450BT Wireless Headphones", brand: "SENNHEISER", price: 24900, oldPrice: 28295, discount: 12, image: "https://placehold.co/400x400/fff/FF5722?text=Sennheiser" },
+        
+        // ========== WALL CHARGERS (IDs 501-502) ==========
+        501: { name: "Samsung 25W PD Super Fast Charger", brand: "SAMSUNG", price: 3500, oldPrice: 5000, discount: 30, image: "https://placehold.co/400x400/fff/FF5722?text=Samsung+Charger" },
+        502: { name: "Anker 20W Nano Charger", brand: "ANKER", price: 2999, oldPrice: 4500, discount: 33, image: "https://placehold.co/400x400/fff/FF5722?text=Anker" },
+        
+        // ========== BLUETOOTH SPEAKERS (IDs 601-612) ==========
+        601: { name: "JBL Flip 6 Bluetooth Speaker", brand: "JBL", price: 28900, oldPrice: 31413, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=JBL+Flip" },
+        602: { name: "JBL Charge 5 Bluetooth Speaker", brand: "JBL", price: 42900, oldPrice: 47666, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=JBL+Charge" },
+        603: { name: "Sony SRS-XB43 Extra Bass Speaker", brand: "Sony", price: 38900, oldPrice: 44100, discount: 12, image: "https://placehold.co/400x400/fff/FF5722?text=Sony+XB43" },
+        604: { name: "Bose SoundLink Flex Speaker", brand: "Bose", price: 35900, oldPrice: 37800, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=Bose+Flex" },
+        605: { name: "Marshall Emberton II Speaker", brand: "Marshall", price: 39900, oldPrice: 39900, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Marshall" },
+        606: { name: "Anker Soundcore 3 Speaker", brand: "Anker", price: 16900, oldPrice: 18800, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=Anker" },
+        607: { name: "Ultimate Ears Boom 3 Speaker", brand: "Ultimate Ears", price: 31900, oldPrice: 37500, discount: 15, image: "https://placehold.co/400x400/fff/FF5722?text=UE+Boom" },
+        608: { name: "Tribit StormBox Pro Speaker", brand: "Tribit", price: 18900, oldPrice: 21500, discount: 12, image: "https://placehold.co/400x400/fff/FF5722?text=Tribit" },
+        609: { name: "JBL Go 4 Mini Speaker", brand: "JBL", price: 8900, oldPrice: 9400, discount: 5, image: "https://placehold.co/400x400/fff/FF5722?text=JBL+Go" },
+        610: { name: "Sony SRS-XE200 Speaker", brand: "Sony", price: 22900, oldPrice: 24900, discount: 8, image: "https://placehold.co/400x400/fff/FF5722?text=Sony+XE200" },
+        611: { name: "Bose SoundLink Revolve+ Speaker", brand: "Bose", price: 54900, oldPrice: 54900, discount: 0, image: "https://placehold.co/400x400/fff/FF5722?text=Bose+Revolve" },
+        612: { name: "Ultimate Ears Hyperboom Speaker", brand: "Ultimate Ears", price: 79900, oldPrice: 88800, discount: 10, image: "https://placehold.co/400x400/fff/FF5722?text=UE+Hyperboom" }
+    };
+
+    function getProductId() {
+        return parseInt(new URLSearchParams(window.location.search).get('id'));
+    }
+
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function showToast(message, isError = false) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.background = isError ? '#dc3545' : '#1a1a1a';
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    async function saveOrderToSupabase(orderData) {
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify({
+                    phone: orderData.phone,
+                    product_name: orderData.product_name,
+                    payment_method: orderData.payment_method,
+                    payment_status: "Pending",
+                    order_status: "Pending",
+                    status: "Pending",
+                    created_at: new Date().toISOString()
+                })
+            });
+
+            if (response.ok) {
+                showToast('✅ Order saved to database!');
+                return true;
+            } else {
+                showToast('⚠️ Order placed but database save failed', true);
+                return false;
+            }
+        } catch (error) {
+            showToast('⚠️ Order placed but database save failed', true);
+            return false;
+        }
+    }
+
+    function renderProduct() {
+        const productId = getProductId();
+        const product = allProducts[productId];
+        const container = document.getElementById('productContainer');
+
+        if (!product) {
+            container.innerHTML = `<div style="grid-column: span 2; text-align: center;"><h2>❌ Product Not Found (ID: ${productId})</h2><p>Product with ID ${productId} does not exist.</p><a href="index.html" class="back-btn">← Back to Home</a></div>`;
+            return;
+        }
+
+        const finalPrice = product.discount > 0 ? Math.round(product.price * (1 - product.discount / 100)) : product.price;
+        let quantity = 1;
+
+        container.innerHTML = `
+            <div class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+            </div>
+            <div>
+                <h1 class="product-title">${product.name}</h1>
+                <div class="product-brand">${product.brand}</div>
+                <div class="price">
+                    ₨ ${formatPrice(finalPrice)}
+                    ${product.oldPrice > 0 ? `<span class="old-price">₨ ${formatPrice(product.oldPrice)}</span>` : ''}
+                    ${product.discount > 0 ? `<span class="discount-badge">-${product.discount}% OFF</span>` : ''}
+                </div>
+                <div class="quantity">
+                    <button id="minusBtn">-</button>
+                    <span id="quantityValue">1</span>
+                    <button id="plusBtn">+</button>
+                </div>
+                <button class="order-btn" id="orderBtn">📲 Order on WhatsApp</button>
+                <a href="index.html" class="back-btn">← Back to Home</a>
+            </div>
+        `;
+
+        const minusBtn = document.getElementById('minusBtn');
+        const plusBtn = document.getElementById('plusBtn');
+        const quantitySpan = document.getElementById('quantityValue');
+        const orderBtn = document.getElementById('orderBtn');
+
+        if (minusBtn) minusBtn.onclick = () => { if (quantity > 1) { quantity--; quantitySpan.innerText = quantity; } };
+        if (plusBtn) plusBtn.onclick = () => { quantity++; quantitySpan.innerText = quantity; };
+        if (orderBtn) {
+            orderBtn.onclick = async () => {
+                const customerPhone = prompt("📞 Enter your WhatsApp number (with country code):", "+923XXXXXXXXX");
+                if (!customerPhone || customerPhone.trim() === "") {
+                    showToast("❌ Phone number required!", true);
+                    return;
+                }
+
+                const total = finalPrice * quantity;
+                const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+
+                const message = `🛒 *NEW ORDER* 🛒%0A%0A` +
+                    `📦 Order: ${orderNumber}%0A` +
+                    `📞 Phone: ${customerPhone}%0A` +
+                    `📱 Product: ${product.name}%0A` +
+                    `🏷️ Brand: ${product.brand}%0A` +
+                    `💰 Price: ₨ ${formatPrice(finalPrice)}%0A` +
+                    `🔢 Qty: ${quantity}%0A` +
+                    `💵 Total: ₨ ${formatPrice(total)}%0A%0A` +
+                    `✅ Please confirm.`;
+
+                window.open(`https://wa.me/${customerPhone.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+                showToast(`📲 Order sent to WhatsApp!`);
+
+                await saveOrderToSupabase({
+                    phone: customerPhone,
+                    product_name: product.name,
+                    payment_method: "Cash on Delivery"
+                });
+            };
+        }
+    }
+
+    renderProduct();
+</script>
+</body>
+</html>
