@@ -1,21 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home - LiBirthStore</title>
-  <meta name="description" content="LiBirthStore ecommerce frontend" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LibirthStore - Pakistan's Best Price Comparison</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+
+        .animated-top { background: linear-gradient(90deg, #0096FF, #00c6ff); padding: 8px 0; overflow: hidden; white-space: nowrap; }
+        .marquee { display: inline-block; animation: marquee 20s linear infinite; font-weight: 600; font-size: 12px; color: white; }
+        .marquee span { margin: 0 20px; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .top-brand-bar { background: white; padding: 12px 20px; border-bottom: 1px solid #e0e0e0; }
+        .top-brand-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
+        .brand-left { display: flex; align-items: center; gap: 15px; }
+        .logo-box { width: 50px; height: 50px; background: #f0f2f5; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .logo-img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-left h1 { font-size: 24px; font-weight: 800; color: #1a1a1a; }
+        .brand-left h1 span { color: #FF5722; }
+        
+        .top-search { flex: 1; max-width: 500px; margin: 0 auto; text-align: center; }
+        .top-search form { display: flex; width: 100%; justify-content: center; }
+        .top-search input { flex: 1; max-width: 350px; padding: 10px 18px; border: 1px solid #ddd; outline: none; font-size: 14px; background: white; border-radius: 0; }
+        .top-search button { background: #FF5722; border: none; padding: 10px 24px; color: white; font-weight: 600; cursor: pointer; border-radius: 0; }
+
+        .amber-strip { background: #FBC200; padding: 6px 20px; text-align: center; font-size: 11px; font-weight: 600; color: #1a1a1a; }
+
+        .main-header { background: #42b0ff; padding: 12px 20px; }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; background: rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 40px; }
+        .logo-icon { font-size: 28px; }
+        .logo h1 { font-size: 24px; font-weight: 800; color: white; }
+        .logo span { color: #FFD700; }
+        .search-bar { flex: 1; max-width: 450px; display: flex; }
+        .search-bar input { flex: 1; padding: 10px 15px; border: none; outline: none; font-size: 13px; border-radius: 0; }
+        .search-bar button { background: #FF5722; border: none; padding: 10px 20px; color: white; font-weight: 600; cursor: pointer; border-radius: 0; }
+        .auth-buttons { display: flex; gap: 12px; }
+        .auth-buttons a { color: white; text-decoration: none; font-weight: 500; font-size: 13px; }
+        .auth-buttons .register { background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; }
+
+        .gradient-section { background: linear-gradient(135deg, #a8e063 0%, #f9d423 100%); padding: 30px 20px; }
+        .category-icons { max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
+        .cat-icon { text-align: center; cursor: pointer; transition: transform 0.2s; text-decoration: none; display: block; }
+        .cat-icon:hover { transform: translateY(-5px); }
+        .cat-icon .icon { background: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .cat-icon span { font-size: 11px; font-weight: 600; color: #1a1a1a; }
+
+        .hero-section { padding: 50px 20px; position: relative; overflow: hidden; animation: bgChange 15s ease infinite; background-size: 200% 200%; }
+        @keyframes bgChange { 0% { background: linear-gradient(135deg, #FF6B6B, #FF8E53); } 20% { background: linear-gradient(135deg, #11998e, #38ef7d); } 40% { background: linear-gradient(135deg, #FF9A9E, #FECFEF); } 60% { background: linear-gradient(135deg, #f093fb, #f5576c); } 80% { background: linear-gradient(135deg, #4facfe, #00f2fe); } 100% { background: linear-gradient(135deg, #FF6B6B, #FF8E53); } }
+        .hero-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
+        .hero-text { flex: 1; color: white; }
+        .hero-text h1 { font-size: 42px; font-weight: 800; margin-bottom: 15px; }
+        .hero-text p { font-size: 16px; margin-bottom: 25px; }
+        .hero-btn { background: #FF5722; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block; cursor: pointer; }
+        .hero-offer { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 15px 25px; border-radius: 20px; text-align: center; min-width: 220px; }
+        .hero-offer .big-text { font-size: 36px; font-weight: 800; color: #FFD700; }
+
+        .search-result-section { background: #f5f7fa; padding: 25px 20px; display: none; }
+        .search-result-section.active { display: block; }
+        .search-result-header { max-width: 1400px; margin: 0 auto 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .search-result-header h2 { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+        .clear-search-btn, .back-home-btn { background: #FF5722; color: white; border: none; padding: 6px 18px; border-radius: 30px; cursor: pointer; font-size: 11px; font-weight: 600; }
+
+        /* ========== PRODUCT GRID - ZERO GOLAI, KAM GAP, BEAUTIFUL ========== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 4px;
+        }
+        
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            text-decoration: none;
+            background: #FFFFFF;
+            border-radius: 0px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            cursor: pointer;
+            border: 1px solid #eef2f8;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #FF5722;
+            z-index: 2;
+        }
+        .product-img {
+            text-align: center;
+            margin-bottom: 10px;
+            background: #fafbfc;
+            padding: 12px;
+        }
+        .product-img img {
+            width: 100%;
+            max-width: 130px;
+            height: 110px;
+            object-fit: contain;
+        }
+        .product-info {
+            width: 100%;
+            text-align: left;
+        }
+        .product-brand {
+            font-size: 10px;
+            color: #FF5722;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .product-name {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1a1a1a;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+            min-height: 34px;
+        }
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .price {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+        .old-price {
+            font-size: 11px;
+            color: #aaa;
+            text-decoration: line-through;
+        }
+        .discount {
+            background: #FF5722;
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            display: inline-block;
+        }
+        .delivery {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 3px 8px;
+            margin-top: 6px;
+            background: #C2185B;
+            color: white;
+        }
+        .fast-delivery { background: #C2185B; color: white; }
+        .express-delivery { background: #F9A825; color: #1a1a1a; }
+
+        /* Section styling */
+        .section { 
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .section-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+        .section-title { 
+            font-size: 24px; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            position: relative; 
+            display: inline-block; 
+            color: white;
+            padding-bottom: 8px;
+        }
+        .section-title:after { 
+            content: ''; 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 60px; 
+            height: 3px; 
+            background: #FF5722; 
+        }
+
+        /* View All Button */
+        .view-all-btn {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 28px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .view-all-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(3px);
+        }
+
+        /* Backgrounds */
+        .bg-1 { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%); }
+        .bg-2 { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .bg-3 { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); }
+        .bg-4 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bg-5 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .bg-6 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .bg-7 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .bg-8 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+        /* Footer */
+        .new-footer { background: #44aaff; padding: 40px 20px 25px; }
+        .new-footer .footer-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
+        .new-footer .footer-col h4 { color: white; font-size: 15px; font-weight: 700; margin-bottom: 15px; }
+        .new-footer .footer-col p, .new-footer .footer-col a { color: rgba(255,255,255,0.85); font-size: 12px; margin: 6px 0; text-decoration: none; display: block; }
+        .new-footer .footer-col a:hover { color: white; text-decoration: underline; }
+        .new-footer .footer-logo { font-size: 24px; font-weight: 800; color: white; margin-bottom: 8px; }
+        .new-footer .footer-logo span { color: #FF5722; }
+        .new-footer .copyright { text-align: center; padding-top: 30px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 11px; color: rgba(255,255,255,0.8); }
+        .social-icons { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+        .social-icons a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        .social-icons a:hover { color: white; transform: translateX(3px); }
+
+        @media (max-width: 768px) {
+            .top-brand-container { flex-direction: column; text-align: center; }
+            .brand-left { justify-content: center; }
+            .top-search { width: 100%; max-width: 100%; }
+            .header-container { flex-direction: column; }
+            .search-bar { max-width: 100%; width: 100%; }
+            .hero-text h1 { font-size: 32px; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+            .product-card { padding: 8px; }
+            .product-img img { max-width: 90px; height: 80px; }
+            .product-name { font-size: 11px; }
+            .price { font-size: 14px; }
+            .category-icons { gap: 15px; }
+            .cat-icon .icon { width: 50px; height: 50px; font-size: 22px; }
+            .new-footer .footer-container { flex-direction: column; gap: 20px; }
+            .section-title { font-size: 20px; }
+        }
+    </style>
 </head>
-<body data-page="home">
-  <div data-header></div>
-  <main class="container page-shell">
-    <div data-page></div>
-  </main>
-  <div data-footer></div>
-  <script src="assets/app.js"></script>
+<body>
+
+<div class="top-brand-bar">
+    <div class="top-brand-container">
+        <div class="brand-left">
+            <div class="logo-box"><img src="https://placehold.co/50x50/FF5722/white?text=LS" alt="Logo" class="logo-img"></div>
+            <h1>Libirth<span>Store</span></h1>
+        </div>
+        <div class="top-search">
+            <form onsubmit="event.preventDefault(); handleTopSearch();">
+                <input type="text" id="topSearchInput" placeholder="Search products or categories...">
+                <button type="submit">🔍 Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="hideableElements">
+    <div class="animated-top"><div class="marquee"><span>🔥 Limited Time Offers!</span><span>📱 Up to 70% Off on Mobiles</span><span>🎧 Headphones @ Rs 949 Only</span><span>🚚 Free Delivery on Orders Above Rs 5,000</span><span>⭐ 4.9 Rating from 50,000+ Customers</span></div></div>
+    <div class="amber-strip">⚡ FLASH SALE - UP TO 70% OFF ⚡</div>
+    <div class="gradient-section">
+        <div class="category-icons">
+            <a href="mobiles.html" class="cat-icon"><div class="icon">📱</div><span>Mobiles</span></a>
+            <a href="earbuds.html" class="cat-icon"><div class="icon">🎧</div><span>Wireless Earbuds</span></a>
+            <a href="smartwatches.html" class="cat-icon"><div class="icon">⌚</div><span>Smart Watches</span></a>
+            <a href="headphones.html" class="cat-icon"><div class="icon">🎧</div><span>Headphones</span></a>
+            <a href="powerbanks.html" class="cat-icon"><div class="icon">🔋</div><span>Power Banks</span></a>
+            <a href="chargers.html" class="cat-icon"><div class="icon">🔌</div><span>Chargers</span></a>
+            <a href="speakers.html" class="cat-icon"><div class="icon">🔊</div><span>Speakers</span></a>
+            <a href="tablets.html" class="cat-icon"><div class="icon">📟</div><span>Tablets</span></a>
+        </div>
+    </div>
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text"><h1>Compare Prices<br>Save Big! 🎉</h1><p>Pakistan's #1 Price Comparison Platform | 50,000+ Happy Customers</p><a class="hero-btn" id="shopNowBtn">Shop Now →</a></div>
+            <div class="hero-offer"><div class="big-text">70% OFF</div><p>on selected Mobiles</p><div class="big-text" style="font-size: 26px; margin-top: 10px;">🚚 FREE Shipping</div><p>on orders above Rs 5,000</p></div>
+        </div>
+    </div>
+</div>
+
+<div class="main-header">
+    <div class="header-container">
+        <a href="index.html" class="logo"><div class="logo-icon">🛍️</div><h1>Libirth<span>Store</span></h1></a>
+        <div class="search-bar"><input type="text" id="searchInput" placeholder="Search products or categories..."><button id="searchButton">🔍 Search</button></div>
+        <div class="auth-buttons"><a href="#">Log in</a><a href="#" class="register">Register</a></div>
+    </div>
+</div>
+
+<div id="searchResultSection" class="search-result-section">
+    <div class="search-result-header"><h2>🔍 Search Results</h2><div><button id="backToHomeBtn" class="back-home-btn">🏠 Back to Home</button><button id="clearSearchBtn" class="clear-search-btn">✕ Clear Search</button></div></div>
+    <p id="searchResultText" style="max-width: 1400px; margin: 0 auto 15px; color: #666;"></p>
+    <div style="max-width: 1400px; margin: 0 auto;"><div class="products-grid" id="searchResultsGrid"></div></div>
+</div>
+
+<div id="originalSections">
+    <div class="section bg-1"><div class="section-container"><h2 class="section-title">🎧 Latest Headphones</h2><div class="products-grid"><a href="product-detail.html?id=401" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Headphones" alt="product"></div><div class="product-info"><div class="product-brand">SONY</div><div class="product-name">Sony WH-1000XM5 Noise Cancelling Headphones</div><div class="price-row"><span class="price">₨ 45,900</span><span class="old-price">₨ 51,000</span><span class="discount">10% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=402" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Bose+Headphones" alt="product"></div><div class="product-info"><div class="product-brand">BOSE</div><div class="product-name">Bose QuietComfort 45 Headphones</div><div class="price-row"><span class="price">₨ 38,900</span><span class="old-price">₨ 42,283</span><span class="discount">8% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=403" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=AirPods+Max" alt="product"></div><div class="product-info"><div class="product-brand">APPLE</div><div class="product-name">Apple AirPods Max Over-Ear Headphones</div><div class="price-row"><span class="price">₨ 159,900</span><span class="old-price">₨ 168,316</span><span class="discount">5% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=404" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Sennheiser" alt="product"></div><div class="product-info"><div class="product-brand">SENNHEISER</div><div class="product-name">Sennheiser HD 450BT Wireless Headphones</div><div class="price-row"><span class="price">₨ 24,900</span><span class="old-price">₨ 28,295</span><span class="discount">12% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="headphones.html" class="view-all-btn">View All →</a></div></div></div>
+
+    <div class="section bg-2"><div class="section-container"><h2 class="section-title">🎧 Latest Wireless Earbuds</h2><div class="products-grid"><a href="product-detail.html?id=5" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Earbuds" alt="product"></div><div class="product-info"><div class="product-brand">SOUNDPEATS</div><div class="product-name">Soundpeats Q3 Pro ANC Wireless Earbuds</div><div class="price-row"><span class="price">₨ 3,999</span><span class="old-price">₨ 6,347</span><span class="discount">37% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=6" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=M04" alt="product"></div><div class="product-info"><div class="product-brand">M04</div><div class="product-name">M04 TWS Wireless Bluetooth Earbuds</div><div class="price-row"><span class="price">₨ 949</span><span class="old-price">₨ 2,965</span><span class="discount">68% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=7" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Zero+Gravity" alt="product"></div><div class="product-info"><div class="product-brand">ZERO GRAVITY</div><div class="product-name">Zero Gravity Earbuds</div><div class="price-row"><span class="price">₨ 3,149</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=8" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Airox+E9" alt="product"></div><div class="product-info"><div class="product-brand">AIROX</div><div class="product-name">Airox E9 Wireless Earbuds</div><div class="price-row"><span class="price">₨ 2,099</span><span class="old-price">₨ 11,660</span><span class="discount">82% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="earbuds.html" class="view-all-btn">View All →</a></div></div></div>
+
+    <div class="section bg-3"><div class="section-container"><h2 class="section-title">💰 Get the best prices in town</h2><div class="products-grid"><a href="product-detail.html?id=9" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Tecno+Camon" alt="product"></div><div class="product-info"><div class="product-brand">TECNO</div><div class="product-name">Tecno Camon 50 Ultra 5G</div><div class="price-row"><span class="price">₨ 119,999</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=10" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Nothing+Phone" alt="product"></div><div class="product-info"><div class="product-brand">NOTHING</div><div class="product-name">Nothing Phone 4a Pro</div><div class="price-row"><span class="price">₨ 238,999</span><span class="old-price">₨ 243,876</span><span class="discount">2% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=11" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Honor+X8d" alt="product"></div><div class="product-info"><div class="product-brand">HONOR</div><div class="product-name">Honor X8d</div><div class="price-row"><span class="price">₨ 64,499</span><span class="old-price">₨ 70,107</span><span class="discount">8% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=12" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Samsung+S25" alt="product"></div><div class="product-info"><div class="product-brand">SAMSUNG</div><div class="product-name">Samsung Galaxy S25 FE</div><div class="price-row"><span class="price">₨ 182,999</span><span class="old-price">₨ 220,480</span><span class="discount">17% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div></div></div>
+
+    <div class="section bg-4"><div class="section-container"><h2 class="section-title">📱 Latest Mobiles</h2><div class="products-grid"><a href="product-detail.html?id=13" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Samsung+A07" alt="product"></div><div class="product-info"><div class="product-brand">SAMSUNG</div><div class="product-name">Samsung Galaxy A07</div><div class="price-row"><span class="price">₨ 27,499</span><span class="old-price">₨ 34,809</span><span class="discount">21% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=14" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Tecno+Camon+40" alt="product"></div><div class="product-info"><div class="product-brand">TECNO</div><div class="product-name">Tecno Camon 40 Pro</div><div class="price-row"><span class="price">₨ 63,999</span><span class="old-price">₨ 80,909</span><span class="discount">21% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=15" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Infinix+Note+60" alt="product"></div><div class="product-info"><div class="product-brand">INFINIX</div><div class="product-name">Infinix Note 60 Edge 5G</div><div class="price-row"><span class="price">₨ 73,199</span><span class="old-price">₨ 87,140</span><span class="discount">16% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=16" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Honor+X8d" alt="product"></div><div class="product-info"><div class="product-brand">HONOR</div><div class="product-name">Honor X8d</div><div class="price-row"><span class="price">₨ 64,499</span><span class="old-price">₨ 70,107</span><span class="discount">8% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="mobiles.html" class="view-all-btn">View All →</a></div></div></div>
+
+    <div class="section bg-5"><div class="section-container"><h2 class="section-title">🔋 Top Deals In Xiaomi</h2><div class="products-grid"><a href="product-detail.html?id=17" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/f8f8f8/333?text=Xiaomi+17+Ultra" alt="Xiaomi 17 Ultra"></div><div class="product-info"><div class="product-brand">XIAOMI</div><div class="product-name">Xiaomi 17 Ultra</div><div class="price-row"><span class="price">₨ 459,999</span><span class="old-price">₨ 479,166</span><span class="discount">4% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=18" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/f8f8f8/333?text=Sound+Party" alt="Xiaomi Sound Party"></div><div class="product-info"><div class="product-brand">XIAOMI</div><div class="product-name">Xiaomi Sound Party Bluetooth Speaker</div><div class="price-row"><span class="price">₨ 21,999</span><span class="old-price">₨ 28,570</span><span class="discount">23% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=19" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/f8f8f8/333?text=65W+GaN+Charger" alt="Xiaomi Charger"></div><div class="product-info"><div class="product-brand">XIAOMI</div><div class="product-name">Xiaomi 65W GaN Super Fast Charger</div><div class="price-row"><span class="price">₨ 5,149</span><span class="old-price">₨ 6,865</span><span class="discount">25% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=20" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/f8f8f8/333?text=Wireless+Stand" alt="Wireless Charging"></div><div class="product-info"><div class="product-brand">XIAOMI</div><div class="product-name">Xiaomi 80W Adaptive Wireless Charging Stand</div><div class="price-row"><span class="price">₨ 18,999</span><span class="old-price">₨ 27,940</span><span class="discount">32% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=21" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/f8f8f8/333?text=Air+Purifier" alt="Air Purifier"></div><div class="product-info"><div class="product-brand">MIJIA</div><div class="product-name">Mijia Smart Air Purifier 6</div><div class="price-row"><span class="price">₨ 72,999</span><span class="old-price">₨ 81,110</span><span class="discount">10% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=22" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/f8f8f8/333?text=67W+Power+Bank" alt="Power Bank"></div><div class="product-info"><div class="product-brand">XIAOMI</div><div class="product-name">Xiaomi 67W Power Bank 20000mAh</div><div class="price-row"><span class="price">₨ 11,099</span><span class="old-price">₨ 17,900</span><span class="discount">38% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="powerbanks.html" class="view-all-btn">View All Xiaomi Deals →</a></div></div></div>
+
+    <div class="section bg-6"><div class="section-container"><h2 class="section-title">⌚ Smart Watches</h2><div class="products-grid"><a href="product-detail.html?id=101" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Smart+Watch" alt="Smart Watch"></div><div class="product-info"><div class="product-brand">APPLE</div><div class="product-name">Apple Watch Ultra 2</div><div class="price-row"><span class="price">₨ 425,000</span><span class="old-price">₨ 447,368</span><span class="discount">5% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=102" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Watch+Series" alt="Watch Series"></div><div class="product-info"><div class="product-brand">SAMSUNG</div><div class="product-name">Samsung Galaxy Watch 6</div><div class="price-row"><span class="price">₨ 145,000</span><span class="old-price">₨ 161,111</span><span class="discount">10% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="smartwatches.html" class="view-all-btn">View All Watches →</a></div></div></div>
+
+    <div class="section bg-7"><div class="section-container"><h2 class="section-title">🔊 Bluetooth Speakers</h2><div class="products-grid">
+        <a href="product-detail.html?id=601" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=JBL+Flip+6" alt="JBL Flip 6"></div><div class="product-info"><div class="product-brand">JBL</div><div class="product-name">JBL Flip 6 Bluetooth Speaker</div><div class="price-row"><span class="price">₨ 28,900</span><span class="old-price">₨ 31,413</span><span class="discount">8% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a>
+        <a href="product-detail.html?id=602" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=JBL+Charge+5" alt="JBL Charge 5"></div><div class="product-info"><div class="product-brand">JBL</div><div class="product-name">JBL Charge 5 Bluetooth Speaker</div><div class="price-row"><span class="price">₨ 42,900</span><span class="old-price">₨ 47,666</span><span class="discount">10% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a>
+    </div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="speakers.html" class="view-all-btn">View All Speakers →</a></div></div></div>
+
+    <div class="section bg-8"><div class="section-container"><h2 class="section-title">💻 Tablets</h2><div class="products-grid"><a href="product-detail.html?id=301" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=iPad" alt="iPad"></div><div class="product-info"><div class="product-brand">APPLE</div><div class="product-name">iPad Pro 12.9 M4</div><div class="price-row"><span class="price">₨ 489,000</span><span class="old-price">₨ 514,736</span><span class="discount">5% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a><a href="product-detail.html?id=302" class="product-card"><div class="product-img"><img src="https://placehold.co/200x150/fff/FF5722?text=Samsung+Tab" alt="Samsung Tab"></div><div class="product-info"><div class="product-brand">SAMSUNG</div><div class="product-name">Samsung Galaxy Tab S9 Ultra</div><div class="price-row"><span class="price">₨ 419,000</span><span class="old-price">₨ 465,555</span><span class="discount">10% OFF</span></div><span class="delivery fast-delivery">⚡ Fast Delivery</span></div></a></div><div class="view-all" style="text-align: center; margin-top: 20px;"><a href="tablets.html" class="view-all-btn">View All Tablets →</a></div></div></div>
+</div>
+
+<div class="new-footer" id="footerSection">
+    <div class="footer-container">
+        <div class="footer-col"><div class="footer-logo">Libirth<span>Store</span></div><p>Pakistan's #1 Price Comparison</p><div class="social-icons"><a href="https://instagram.com/libirthstore" target="_blank">📷 Instagram</a><a href="https://youtube.com/@LiBirthStore" target="_blank">▶️ YouTube</a><a href="mailto:Sagni6444@gmail.com" target="_blank">📧 Gmail</a><a href="https://facebook.com/LiBirthStore" target="_blank">📘 Facebook</a><a href="https://wa.me/923454048981" target="_blank">💬 WhatsApp</a></div><p style="margin-top: 8px;">📞 +92 345 4048981</p></div>
+        <div class="footer-col"><h4>Shop by Category</h4><a href="mobiles.html">📱 Mobiles</a><a href="earbuds.html">🎧 Wireless Earbuds</a><a href="smartwatches.html">⌚ Smart Watches</a><a href="headphones.html">🎧 Headphones</a><a href="powerbanks.html">🔋 Power Banks</a><a href="chargers.html">🔌 Wall Chargers</a><a href="speakers.html">🔊 Bluetooth Speakers</a><a href="tablets.html">💻 Tablets</a></div>
+        <div class="footer-col"><h4>Quick Links</h4><a href="index.html">Home</a><a href="#">About Us</a><a href="#">Contact Support</a><a href="#">Careers</a></div>
+        <div class="footer-col"><h4>Customer Service</h4><a href="#">Help Center</a><a href="#">Return Policy</a><a href="#">Shipping Info</a><a href="#">Track Order</a></div>
+        <div class="footer-col"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+    </div>
+    <div class="copyright">© 2026 LibirthStore - All rights reserved | Pakistan's Best Price Comparison Platform</div>
+</div>
+
+<script>
+    const allProducts = [
+        { id: 401, name: "Sony WH-1000XM5 Noise Cancelling Headphones", brand: "SONY", price: 45900, oldPrice: 51000, discount: 10, image: "https://placehold.co/200x150/fff/FF5722?text=Headphones", delivery: "fast" },
+        { id: 402, name: "Bose QuietComfort 45 Headphones", brand: "BOSE", price: 38900, oldPrice: 42283, discount: 8, image: "https://placehold.co/200x150/fff/FF5722?text=Bose+Headphones", delivery: "fast" },
+        { id: 403, name: "Apple AirPods Max Over-Ear Headphones", brand: "APPLE", price: 159900, oldPrice: 168316, discount: 5, image: "https://placehold.co/200x150/fff/FF5722?text=AirPods+Max", delivery: "fast" },
+        { id: 404, name: "Sennheiser HD 450BT Wireless Headphones", brand: "SENNHEISER", price: 24900, oldPrice: 28295, discount: 12, image: "https://placehold.co/200x150/fff/FF5722?text=Sennheiser", delivery: "fast" },
+        { id: 1, name: "Eyebrow And Facial Hair Remover Trimmer", brand: "PHILIPS", price: 999, oldPrice: 3330, discount: 70, image: "https://placehold.co/200x150/fff/FF5722?text=Trimmer", delivery: "fast" }, { id: 2, name: "KM-6330 3 in 1 Grooming Kit", brand: "KM", price: 1749, oldPrice: 3015, discount: 42, image: "https://placehold.co/200x150/fff/FF5722?text=Grooming", delivery: "fast" }, { id: 3, name: "Dinglong Professional Beard And Hair Trimmer RF-609", brand: "DINGLONG", price: 2949, oldPrice: 3985, discount: 26, image: "https://placehold.co/200x150/fff/FF5722?text=Beard+Trimmer", delivery: "fast" }, { id: 4, name: "Hair Styling Comb Straightener Modelling Brush", brand: "STYLEPRO", price: 1149, oldPrice: 3481, discount: 67, image: "https://placehold.co/200x150/fff/FF5722?text=Straightener", delivery: "fast" }, { id: 5, name: "Soundpeats Q3 Pro ANC Wireless Earbuds", brand: "SOUNDPEATS", price: 3999, oldPrice: 6347, discount: 37, image: "https://placehold.co/200x150/fff/FF5722?text=Earbuds", delivery: "fast" }, { id: 6, name: "M04 TWS Wireless Bluetooth Earbuds", brand: "M04", price: 949, oldPrice: 2965, discount: 68, image: "https://placehold.co/200x150/fff/FF5722?text=M04", delivery: "fast" }, { id: 7, name: "Zero Gravity Earbuds", brand: "ZERO GRAVITY", price: 3149, oldPrice: 0, discount: 0, image: "https://placehold.co/200x150/fff/FF5722?text=Zero+Gravity", delivery: "fast" }, { id: 8, name: "Airox E9 Wireless Earbuds", brand: "AIROX", price: 2099, oldPrice: 11660, discount: 82, image: "https://placehold.co/200x150/fff/FF5722?text=Airox+E9", delivery: "fast" }, { id: 9, name: "Tecno Camon 50 Ultra 5G", brand: "TECNO", price: 119999, oldPrice: 0, discount: 0, image: "https://placehold.co/200x150/fff/FF5722?text=Tecno+Camon", delivery: "fast" }, { id: 10, name: "Nothing Phone 4a Pro", brand: "NOTHING", price: 238999, oldPrice: 243876, discount: 2, image: "https://placehold.co/200x150/fff/FF5722?text=Nothing+Phone", delivery: "fast" }, { id: 11, name: "Honor X8d", brand: "HONOR", price: 64499, oldPrice: 70107, discount: 8, image: "https://placehold.co/200x150/fff/FF5722?text=Honor+X8d", delivery: "fast" }, { id: 12, name: "Samsung Galaxy S25 FE", brand: "SAMSUNG", price: 182999, oldPrice: 220480, discount: 17, image: "https://placehold.co/200x150/fff/FF5722?text=Samsung+S25", delivery: "fast" }, { id: 13, name: "Samsung Galaxy A07", brand: "SAMSUNG", price: 27499, oldPrice: 34809, discount: 21, image: "https://placehold.co/200x150/fff/FF5722?text=Samsung+A07", delivery: "fast" }, { id: 14, name: "Tecno Camon 40 Pro", brand: "TECNO", price: 63999, oldPrice: 80909, discount: 21, image: "https://placehold.co/200x150/fff/FF5722?text=Tecno+Camon+40", delivery: "fast" }, { id: 15, name: "Infinix Note 60 Edge 5G", brand: "INFINIX", price: 73199, oldPrice: 87140, discount: 16, image: "https://placehold.co/200x150/fff/FF5722?text=Infinix+Note+60", delivery: "fast" }, { id: 16, name: "Honor X8d", brand: "HONOR", price: 64499, oldPrice: 70107, discount: 8, image: "https://placehold.co/200x150/fff/FF5722?text=Honor+X8d", delivery: "fast" }, { id: 17, name: "Xiaomi 17 Ultra", brand: "XIAOMI", price: 459999, oldPrice: 479166, discount: 4, image: "https://placehold.co/200x150/f8f8f8/333?text=Xiaomi+17+Ultra", delivery: "fast" }, { id: 18, name: "Xiaomi Sound Party Bluetooth Speaker", brand: "XIAOMI", price: 21999, oldPrice: 28570, discount: 23, image: "https://placehold.co/200x150/f8f8f8/333?text=Sound+Party", delivery: "fast" }, { id: 19, name: "Xiaomi 65W GaN Super Fast Charger", brand: "XIAOMI", price: 5149, oldPrice: 6865, discount: 25, image: "https://placehold.co/200x150/f8f8f8/333?text=65W+GaN+Charger", delivery: "fast" }, { id: 20, name: "Xiaomi 80W Adaptive Wireless Charging Stand", brand: "XIAOMI", price: 18999, oldPrice: 27940, discount: 32, image: "https://placehold.co/200x150/f8f8f8/333?text=Wireless+Stand", delivery: "fast" }, { id: 21, name: "Mijia Smart Air Purifier 6", brand: "MIJIA", price: 72999, oldPrice: 81110, discount: 10, image: "https://placehold.co/200x150/f8f8f8/333?text=Air+Purifier", delivery: "fast" }, { id: 22, name: "Xiaomi 67W Power Bank 20000mAh", brand: "XIAOMI", price: 11099, oldPrice: 17900, discount: 38, image: "https://placehold.co/200x150/f8f8f8/333?text=67W+Power+Bank", delivery: "fast" }, { id: 101, name: "Apple Watch Ultra 2", brand: "APPLE", price: 425000, oldPrice: 447368, discount: 5, image: "https://placehold.co/200x150/fff/FF5722?text=Smart+Watch", delivery: "fast" }, { id: 102, name: "Samsung Galaxy Watch 6", brand: "SAMSUNG", price: 145000, oldPrice: 161111, discount: 10, image: "https://placehold.co/200x150/fff/FF5722?text=Watch+Series", delivery: "fast" },
+        { id: 601, name: "JBL Flip 6 Bluetooth Speaker", brand: "JBL", price: 28900, oldPrice: 31413, discount: 8, image: "https://placehold.co/200x150/fff/FF5722?text=JBL+Flip+6", delivery: "fast" },
+        { id: 602, name: "JBL Charge 5 Bluetooth Speaker", brand: "JBL", price: 42900, oldPrice: 47666, discount: 10, image: "https://placehold.co/200x150/fff/FF5722?text=JBL+Charge+5", delivery: "fast" },
+        { id: 301, name: "iPad Pro 12.9 M4", brand: "APPLE", price: 489000, oldPrice: 514736, discount: 5, image: "https://placehold.co/200x150/fff/FF5722?text=iPad", delivery: "fast" },
+        { id: 302, name: "Samsung Galaxy Tab S9 Ultra", brand: "SAMSUNG", price: 419000, oldPrice: 465555, discount: 10, image: "https://placehold.co/200x150/fff/FF5722?text=Samsung+Tab", delivery: "fast" }
+    ];
+
+    const categoryPages = {
+        "mobiles": "mobiles.html", "mobile": "mobiles.html", "📱": "mobiles.html",
+        "wireless earbuds": "earbuds.html", "earbuds": "earbuds.html", "🎧": "earbuds.html",
+        "smart watches": "smartwatches.html", "smartwatch": "smartwatches.html", "watches": "smartwatches.html", "watch": "smartwatches.html", "⌚": "smartwatches.html",
+        "headphones": "headphones.html", "headphone": "headphones.html",
+        "power banks": "powerbanks.html", "powerbank": "powerbanks.html", "power bank": "powerbanks.html", "🔋": "powerbanks.html",
+        "chargers": "chargers.html", "charger": "chargers.html", "wall charger": "chargers.html", "🔌": "chargers.html",
+        "speakers": "speakers.html", "speaker": "speakers.html", "bluetooth speaker": "speakers.html", "🔊": "speakers.html",
+        "tablets": "tablets.html", "tablet": "tablets.html", "📟": "tablets.html"
+    };
+
+    const mainSearchInput = document.getElementById('searchInput');
+    const topSearchInput = document.getElementById('topSearchInput');
+    const searchBtn = document.getElementById('searchButton');
+    const searchResultSection = document.getElementById('searchResultSection');
+    const searchResultsGrid = document.getElementById('searchResultsGrid');
+    const searchResultText = document.getElementById('searchResultText');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const backToHomeBtn = document.getElementById('backToHomeBtn');
+    const originalSections = document.getElementById('originalSections');
+    const hideableElements = document.getElementById('hideableElements');
+    const footerSection = document.getElementById('footerSection');
+    const shopNowBtn = document.getElementById('shopNowBtn');
+
+    function formatPrice(price) { return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    function renderProducts(products, container) {
+        if (products.length === 0) {
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 8px;">😞 No products found. Try "iPhone", "Samsung", "Headphones"</div>`;
+            return;
+        }
+        container.innerHTML = products.map(p => {
+            const finalPrice = p.discount > 0 ? Math.round(p.price * (1 - p.discount / 100)) : p.price;
+            const deliveryClass = p.delivery === 'fast' ? 'fast-delivery' : 'express-delivery';
+            const deliveryText = p.delivery === 'fast' ? '⚡ Fast Delivery' : '📦 Express Delivery';
+            return `
+                <a href="product-detail.html?id=${p.id}" class="product-card">
+                    <div class="product-img"><img src="${p.image}" alt="${p.name}"></div>
+                    <div class="product-info">
+                        <div class="product-brand">${p.brand}</div>
+                        <div class="product-name">${p.name}</div>
+                        <div class="price-row">
+                            <span class="price">₨ ${formatPrice(finalPrice)}</span>
+                            ${p.oldPrice > 0 ? `<span class="old-price">₨ ${formatPrice(p.oldPrice)}</span>` : ''}
+                            ${p.discount > 0 ? `<span class="discount">-${p.discount}% OFF</span>` : ''}
+                        </div>
+                        <span class="delivery ${deliveryClass}">${deliveryText}</span>
+                    </div>
+                </a>
+            `;
+        }).join('');
+    }
+
+    function performSearch(queryValue) {
+        const query = queryValue.trim().toLowerCase();
+        if (query === "") { resetToHome(); return; }
+        for (let [key, page] of Object.entries(categoryPages)) {
+            if (query === key || query.includes(key)) { window.location.href = page; return; }
+        }
+        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || p.brand.toLowerCase().includes(query));
+        if (originalSections) originalSections.style.display = 'none';
+        if (hideableElements) hideableElements.style.display = 'none';
+        if (footerSection) footerSection.style.display = 'block';
+        searchResultSection.classList.add('active');
+        searchResultText.innerHTML = `Showing ${filtered.length} product${filtered.length !== 1 ? 's' : ''} matching "<strong>${query}</strong>"`;
+        renderProducts(filtered, searchResultsGrid);
+    }
+
+    function handleMainSearch() { performSearch(mainSearchInput.value); }
+    function handleTopSearch() { performSearch(topSearchInput.value); }
+    
+    function resetToHome() {
+        mainSearchInput.value = '';
+        if (topSearchInput) topSearchInput.value = '';
+        searchResultSection.classList.remove('active');
+        if (originalSections) originalSections.style.display = 'block';
+        if (hideableElements) hideableElements.style.display = 'block';
+        if (footerSection) footerSection.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    shopNowBtn.addEventListener('click', () => {
+        const productsSection = document.querySelector('.section');
+        if (productsSection) productsSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    searchBtn.addEventListener('click', handleMainSearch);
+    mainSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleMainSearch(); });
+    if (topSearchInput) { topSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTopSearch(); }); }
+    clearSearchBtn.addEventListener('click', resetToHome);
+    backToHomeBtn.addEventListener('click', resetToHome);
+
+    if (originalSections) originalSections.style.display = 'block';
+    if (hideableElements) hideableElements.style.display = 'block';
+    if (footerSection) footerSection.style.display = 'block';
+    searchResultSection.classList.remove('active');
+</script>
 </body>
 </html>
