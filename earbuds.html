@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>LibirthStore · Wireless Earbuds</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: #1a1a1a; line-height: 1.4; }
+        .header { background: white; padding: 12px 20px; border-bottom: 1px solid #eaeef2; position: sticky; top: 0; z-index: 100; }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .logo { font-size: 24px; font-weight: 800; color: #0b1c2e; text-decoration: none; }
+        .logo span { color: #FF5722; }
+        .search-bar { flex: 1; max-width: 500px; display: flex; }
+        .search-bar input { flex: 1; padding: 10px 18px; border: 1px solid #dee2e6; border-radius: 44px 0 0 44px; outline: none; font-size: 14px; background: white; }
+        .search-bar button { background: #191919; border: none; padding: 10px 22px; border-radius: 0 44px 44px 0; color: white; font-weight: 600; cursor: pointer; }
+        .search-bar button:hover { background: #FF5722; }
+        .auth-buttons { display: flex; gap: 16px; }
+        .auth-buttons a { color: #2c3e4e; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .auth-buttons a:hover { color: #FF5722; }
+        .category-nav { background: white; border-bottom: 1px solid #eaeef2; padding: 8px 20px; overflow-x: auto; white-space: nowrap; }
+        .category-nav-container { max-width: 1400px; margin: 0 auto; display: flex; gap: 24px; }
+        .category-nav a { color: #4a5568; text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 0; display: inline-block; transition: 0.2s; }
+        .category-nav a:hover, .category-nav a.active { color: #FF5722; border-bottom: 2px solid #FF5722; }
+        .main-container { max-width: 1400px; margin: 20px auto; padding: 0 20px; display: flex; gap: 24px; }
+        .sidebar { width: 260px; background: white; border-radius: 20px; padding: 16px 14px 20px 14px; position: sticky; top: 120px; height: fit-content; border: 1px solid #edf2f7; }
+        .sidebar h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1.5px solid #f0f0f0; }
+        .sidebar-section { margin-bottom: 20px; }
+        .sidebar-section h4 { font-size: 12px; font-weight: 600; color: #4a5568; margin-bottom: 10px; }
+        .filter-option { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 12px; cursor: pointer; }
+        .filter-option input { width: 14px; height: 14px; accent-color: #FF5722; cursor: pointer; }
+        .price-range { display: flex; gap: 8px; margin-top: 6px; }
+        .price-range input { width: 100%; padding: 6px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
+        .apply-btn { width: 100%; padding: 6px 8px; background: #1e293b; color: white; border: none; border-radius: 30px; margin-top: 10px; cursor: pointer; font-size: 11px; font-weight: 600; }
+        .apply-btn:hover { background: #FF5722; }
+        .reset-filters { background: transparent; border: 1px solid #dee2e6; color: #4b5563; margin-top: 6px; }
+        .products-area { flex: 1; min-width: 0; }
+        .category-header { background: white; border-radius: 16px; padding: 16px 20px; margin-bottom: 20px; border: 1px solid #edf2f7; }
+        .category-header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .category-header p { font-size: 13px; color: #666; margin-top: 5px; }
+        .results-header { background: white; border-radius: 16px; padding: 10px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border: 1px solid #edf2f7; }
+        .results-count { font-size: 12px; font-weight: 500; background: #f1f5f9; padding: 4px 10px; border-radius: 30px; }
+        .sort-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .sort-btn { background: transparent; border: 1px solid #e2e8f0; padding: 5px 12px; border-radius: 30px; font-size: 11px; font-weight: 500; cursor: pointer; transition: 0.2s; color: #2c3e4e; }
+        .sort-btn.active { background: #FF5722; border-color: #FF5722; color: white; }
+        
+        /* PRODUCT GRID - BADA SIZE */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .product-card {
+            background: white;
+            padding: 12px 12px 16px 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid #eef2f8;
+            border-radius: 0px;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        .product-card:hover {
+            border-color: #FF5722;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+        .product-img {
+            text-align: center;
+            padding: 8px 4px;
+            margin-bottom: 8px;
+        }
+        .product-img img {
+            max-width: 100%;
+            height: 100px;
+            object-fit: contain;
+        }
+        .product-brand {
+            font-size: 10px;
+            font-weight: 700;
+            color: #FF5722;
+            text-transform: uppercase;
+        }
+        .product-title {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.35;
+            margin: 5px 0 4px;
+            color: #0f172a;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 6px 0 4px;
+            flex-wrap: wrap;
+        }
+        .product-price {
+            font-weight: 800;
+            font-size: 15px;
+            color: #1e293b;
+        }
+        .original-price {
+            font-size: 11px;
+            color: #8e9aaf;
+            text-decoration: line-through;
+        }
+        .discount-badge {
+            background: #77DD77;
+            color: #1e3a1e;
+            font-weight: 800;
+            font-size: 9px;
+            padding: 2px 6px;
+            display: inline-block;
+            margin-left: auto;
+            white-space: nowrap;
+            font-family: monospace;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2px;
+        }
+        .delivery-info {
+            margin-top: 8px;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 3px 0;
+            display: flex;
+            align-items: center;
+        }
+        .fast-delivery {
+            background: #C2185B;
+            color: white;
+            font-style: italic;
+            padding: 3px 8px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 9px;
+        }
+        .express-delivery {
+            background: #F9A825;
+            color: black;
+            font-style: italic;
+            padding: 3px 8px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 9px;
+        }
+        .rating {
+            font-size: 10px;
+            color: #f5b042;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .no-results { background: white; padding: 40px 20px; text-align: center; font-size: 13px; color: #5b6e8c; border: 1px solid #eef2f8; }
+        .show-all-btn { background: #FF5722; color: white; border: none; padding: 8px 20px; border-radius: 30px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 15px; }
+        
+        /* NEW BLUE FOOTER */
+        .new-footer {
+            background: #44aaff;
+            margin-top: 0;
+            padding: 40px 20px 25px;
+        }
+        .new-footer .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 35px;
+        }
+        .new-footer .footer-col h4 {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .new-footer .footer-col p, .new-footer .footer-col a {
+            color: rgba(255,255,255,0.85);
+            font-size: 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        .new-footer .footer-col a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        .new-footer .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .new-footer .footer-logo span {
+            color: #FF5722;
+        }
+        .new-footer .copyright {
+            text-align: center;
+            padding-top: 35px;
+            margin-top: 35px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+        }
+        .social-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .social-icons a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 12px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .social-icons a:hover {
+            color: white;
+            transform: translateX(3px);
+        }
+        @media (max-width: 768px) {
+            .new-footer .footer-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .main-container { flex-direction: column; }
+            .sidebar { width: 100%; position: static; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+            .product-img img { height: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">Libirth<span>Store</span></a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search earbuds or categories (e.g., Mobiles, Headphones)...">
+                <button id="searchButton">Search</button>
+            </div>
+            <div class="auth-buttons"><a href="#">Account</a><a href="#">Cart</a><a href="#">Wishlist</a></div>
+        </div>
+    </header>
+
+    <div class="category-nav">
+        <div class="category-nav-container">
+            <a href="mobiles.html">📱 Mobiles</a>
+            <a href="earbuds.html" class="active">🎧 Wireless Earbuds</a>
+            <a href="smartwatches.html">⌚ Smart Watches</a>
+            <a href="headphones.html">🎧 Headphones</a>
+            <a href="powerbanks.html">🔋 Power Banks</a>
+            <a href="chargers.html">🔌 Wall Chargers</a>
+            <a href="speakers.html">🔊 Bluetooth Speakers</a>
+            <a href="tablets.html">💻 Tablets</a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <h3>Filters</h3>
+            <div class="sidebar-section">
+                <h4>Brand</h4>
+                <label class="filter-option"><input type="checkbox" value="Apple" data-filter="brand"> Apple</label>
+                <label class="filter-option"><input type="checkbox" value="Samsung" data-filter="brand"> Samsung</label>
+                <label class="filter-option"><input type="checkbox" value="Sony" data-filter="brand"> Sony</label>
+                <label class="filter-option"><input type="checkbox" value="Jabra" data-filter="brand"> Jabra</label>
+                <label class="filter-option"><input type="checkbox" value="Boat" data-filter="brand"> Boat</label>
+                <label class="filter-option"><input type="checkbox" value="OnePlus" data-filter="brand"> OnePlus</label>
+                <label class="filter-option"><input type="checkbox" value="Realme" data-filter="brand"> Realme</label>
+                <label class="filter-option"><input type="checkbox" value="Nothing" data-filter="brand"> Nothing</label>
+            </div>
+            <div class="sidebar-section">
+                <h4>Battery Life</h4>
+                <label class="filter-option"><input type="checkbox" value="Up to 24hrs" data-filter="battery"> Up to 24hrs</label>
+                <label class="filter-option"><input type="checkbox" value="24-36hrs" data-filter="battery"> 24-36hrs</label>
+                <label class="filter-option"><input type="checkbox" value="36hrs+" data-filter="battery"> 36hrs+</label>
+            </div>
+            <div class="sidebar-section">
+                <h4>Noise Cancellation</h4>
+                <label class="filter-option"><input type="checkbox" value="Yes" data-filter="anc"> Active ANC</label>
+                <label class="filter-option"><input type="checkbox" value="No" data-filter="anc"> Without ANC</label>
+            </div>
+            <div class="sidebar-section">
+                <h4>Price range (₨)</h4>
+                <div class="price-range"><input type="number" id="minPrice" placeholder="Min ₨"><input type="number" id="maxPrice" placeholder="Max ₨"></div>
+                <button class="apply-btn" id="priceApplyBtn">Apply price</button>
+                <button class="apply-btn reset-filters" id="resetFiltersBtn">Reset all filters</button>
+            </div>
+        </aside>
+        <div class="products-area">
+            <div class="category-header"><h1>🎧 Wireless Earbuds</h1><p>Premium sound quality with active noise cancellation</p></div>
+            <div class="results-header"><div class="results-count" id="resultsCount">— products</div>
+                <div class="sort-group"><button class="sort-btn" data-sort="popularity">⭐ Popularity</button><button class="sort-btn" data-sort="price_asc">💰 Price (Low to High)</button><button class="sort-btn" data-sort="price_desc">💰 Price (High to Low)</button></div>
+            </div>
+            <div id="productsGridContainer" class="products-grid"></div>
+        </div>
+    </div>
+
+    <!-- NEW BLUE FOOTER -->
+    <div class="new-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">Libirth<span>Store</span></div>
+                <p>Pakistan's #1 Price Comparison</p>
+                <div class="social-icons" style="margin-top: 15px;">
+                    <a href="https://instagram.com/libirthstore" target="_blank">📷 Instagram</a>
+                    <a href="https://youtube.com/@LiBirthStore" target="_blank">▶️ YouTube</a>
+                    <a href="mailto:Sagni6444@gmail.com" target="_blank">📧 Gmail</a>
+                    <a href="https://facebook.com/LiBirthStore" target="_blank">📘 Facebook</a>
+                    <a href="https://wa.me/923454048981" target="_blank">💬 WhatsApp</a>
+                </div>
+                <p style="margin-top: 10px; font-size: 11px;">📞 +92 345 4048981</p>
+            </div>
+            <div class="footer-col">
+                <h4>Shop by Category</h4>
+                <a href="mobiles.html">📱 Mobiles</a>
+                <a href="earbuds.html">🎧 Wireless Earbuds</a>
+                <a href="smartwatches.html">⌚ Smart Watches</a>
+                <a href="headphones.html">🎧 Headphones</a>
+                <a href="powerbanks.html">🔋 Power Banks</a>
+                <a href="chargers.html">🔌 Wall Chargers</a>
+                <a href="speakers.html">🔊 Bluetooth Speakers</a>
+                <a href="tablets.html">💻 Tablets</a>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="#">About Us</a>
+                <a href="#">Contact Support</a>
+                <a href="#">Careers</a>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Return Policy</a>
+                <a href="#">Shipping Info</a>
+                <a href="#">Track Order</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 LibirthStore - All rights reserved | Pakistan's Best Price Comparison Platform
+        </div>
+    </div>
+
+    <script>
+        // Category pages mapping for search bar
+        const categoryPages = {
+            "mobiles": "mobiles.html", "mobile": "mobiles.html", "📱": "mobiles.html",
+            "wireless earbuds": "earbuds.html", "earbuds": "earbuds.html", "🎧": "earbuds.html",
+            "smart watches": "smartwatches.html", "smartwatch": "smartwatches.html", "watches": "smartwatches.html", "watch": "smartwatches.html", "⌚": "smartwatches.html",
+            "headphones": "headphones.html", "headphone": "headphones.html",
+            "power banks": "powerbanks.html", "powerbank": "powerbanks.html", "power bank": "powerbanks.html", "🔋": "powerbanks.html",
+            "chargers": "chargers.html", "charger": "chargers.html", "wall charger": "chargers.html", "🔌": "chargers.html",
+            "speakers": "speakers.html", "speaker": "speakers.html", "bluetooth speaker": "speakers.html", "🔊": "speakers.html",
+            "tablets": "tablets.html", "tablet": "tablets.html", "📟": "tablets.html"
+        };
+
+        const productsRaw = [
+            { id: 1, name: "Apple AirPods Pro 2", brand: "Apple", price: 24900, rating: 4.9, image: "https://placehold.co/200x150?text=🎧+AirPods+Pro", keywords: "apple airpods pro", discount: 8, fastDelivery: true, battery: "24-36hrs", anc: "Yes" },
+            { id: 2, name: "Samsung Galaxy Buds2 Pro", brand: "Samsung", price: 15999, rating: 4.8, image: "https://placehold.co/200x150?text=🎧+Galaxy+Buds", keywords: "samsung buds pro", discount: 12, fastDelivery: true, battery: "24-36hrs", anc: "Yes" },
+            { id: 3, name: "Sony WF-1000XM5", brand: "Sony", price: 24990, rating: 4.9, image: "https://placehold.co/200x150?text=🎧+Sony+XM5", keywords: "sony noise cancelling", discount: 10, fastDelivery: true, battery: "24-36hrs", anc: "Yes" },
+            { id: 4, name: "Jabra Elite 10", brand: "Jabra", price: 21999, rating: 4.7, image: "https://placehold.co/200x150?text=🎧+Jabra+Elite", keywords: "jabra elite", discount: 15, fastDelivery: false, battery: "24-36hrs", anc: "Yes" },
+            { id: 5, name: "Boat Nirvana 525", brand: "Boat", price: 4999, rating: 4.5, image: "https://placehold.co/200x150?text=🎧+Boat+Nirvana", keywords: "boat nirvana anc", discount: 20, fastDelivery: true, battery: "36hrs+", anc: "Yes" },
+            { id: 6, name: "OnePlus Buds Pro 2", brand: "OnePlus", price: 11999, rating: 4.6, image: "https://placehold.co/200x150?text=🎧+OnePlus+Buds", keywords: "oneplus buds pro", discount: 10, fastDelivery: true, battery: "24-36hrs", anc: "Yes" },
+            { id: 7, name: "Realme Buds Air 5 Pro", brand: "Realme", price: 4999, rating: 4.5, image: "https://placehold.co/200x150?text=🎧+Realme+Buds", keywords: "realme air 5 pro", discount: 0, fastDelivery: false, battery: "36hrs+", anc: "Yes" },
+            { id: 8, name: "Nothing Ear 2", brand: "Nothing", price: 12999, rating: 4.6, image: "https://placehold.co/200x150?text=🎧+Nothing+Ear", keywords: "nothing ear transparent", discount: 8, fastDelivery: true, battery: "24-36hrs", anc: "Yes" },
+            { id: 9, name: "Sony WF-C700N", brand: "Sony", price: 9990, rating: 4.4, image: "https://placehold.co/200x150?text=🎧+Sony+C700N", keywords: "sony budget anc", discount: 5, fastDelivery: true, battery: "Up to 24hrs", anc: "Yes" },
+            { id: 10, name: "Boat Airdopes 141", brand: "Boat", price: 1299, rating: 4.3, image: "https://placehold.co/200x150?text=🎧+Airdopes", keywords: "boat airdopes budget", discount: 15, fastDelivery: false, battery: "36hrs+", anc: "No" },
+            { id: 11, name: "OnePlus Nord Buds 2", brand: "OnePlus", price: 2999, rating: 4.4, image: "https://placehold.co/200x150?text=🎧+Nord+Buds", keywords: "oneplus nord budget", discount: 8, fastDelivery: true, battery: "36hrs+", anc: "No" },
+            { id: 12, name: "Apple AirPods 3", brand: "Apple", price: 20900, rating: 4.7, image: "https://placehold.co/200x150?text=🎧+AirPods+3", keywords: "apple airpods 3", discount: 0, fastDelivery: true, battery: "24-36hrs", anc: "No" }
+        ];
+
+        function computePrice(p,d){ if(d>0) return Math.round(p*(1-d/100)); return p; }
+        let products = productsRaw.map(p => ({...p, finalPrice: computePrice(p.price, p.discount), hasDiscount: p.discount > 0, discountPercent: p.discount}));
+
+        const searchInput = document.getElementById('searchInput'), searchBtn = document.getElementById('searchButton');
+        const productsContainer = document.getElementById('productsGridContainer'), resultsCountSpan = document.getElementById('resultsCount');
+        const minPriceInput = document.getElementById('minPrice'), maxPriceInput = document.getElementById('maxPrice');
+        const priceApplyBtn = document.getElementById('priceApplyBtn'), resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        const brandCheckboxes = document.querySelectorAll('input[data-filter="brand"]');
+        const batteryCheckboxes = document.querySelectorAll('input[data-filter="battery"]');
+        const ancCheckboxes = document.querySelectorAll('input[data-filter="anc"]');
+        const sortBtns = document.querySelectorAll('.sort-btn');
+
+        let currentSearchQuery = "", activeBrands = new Set(), activeBattery = new Set(), activeAnc = new Set(), priceMin = null, priceMax = null, currentSort = "popularity";
+
+        function updateSortUI() { sortBtns.forEach(btn => { if(btn.getAttribute('data-sort') === currentSort) btn.classList.add('active'); else btn.classList.remove('active'); }); }
+        
+        function filterProducts() {
+            let f = [...products];
+            const q = currentSearchQuery.trim().toLowerCase();
+            if(q) f = f.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
+            if(activeBrands.size) f = f.filter(p => activeBrands.has(p.brand));
+            if(activeBattery.size) f = f.filter(p => activeBattery.has(p.battery));
+            if(activeAnc.size) f = f.filter(p => activeAnc.has(p.anc));
+            if(priceMin !== null && !isNaN(priceMin)) f = f.filter(p => p.finalPrice >= priceMin);
+            if(priceMax !== null && !isNaN(priceMax)) f = f.filter(p => p.finalPrice <= priceMax);
+            if(currentSort === "price_asc") f.sort((a,b) => a.finalPrice - b.finalPrice);
+            else if(currentSort === "price_desc") f.sort((a,b) => b.finalPrice - a.finalPrice);
+            else f.sort((a,b) => b.rating - a.rating);
+            return f;
+        }
+        
+        function formatPrice(p) { return p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+        
+        // Search with category navigation
+        function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            
+            if (query === "") {
+                currentSearchQuery = "";
+                render();
+                return;
+            }
+            
+            // Check if query matches any category
+            for (let [key, page] of Object.entries(categoryPages)) {
+                if (query === key || query.includes(key)) {
+                    window.location.href = page;
+                    return;
+                }
+            }
+            
+            // If no category match, search products normally
+            currentSearchQuery = query;
+            render();
+        }
+        
+        function render() {
+            const fl = filterProducts(); const c = fl.length;
+            resultsCountSpan.innerText = `${c} ${c === 1 ? 'earbud' : 'earbuds'} found`;
+            if(c === 0) {
+                productsContainer.innerHTML = `<div class="no-results">🎧 No earbuds found.<br><button class="show-all-btn" id="showAllBtn">⟳ Show All Products</button></div>`;
+                const btn = document.getElementById('showAllBtn');
+                if(btn) btn.addEventListener('click', () => { currentSearchQuery = ""; searchInput.value = ""; activeBrands.clear(); activeBattery.clear(); activeAnc.clear(); document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false); minPriceInput.value = ""; maxPriceInput.value = ""; priceMin = null; priceMax = null; currentSort = "popularity"; updateSortUI(); render(); });
+                return;
+            }
+            productsContainer.innerHTML = fl.map(p => `<a href="product-detail.html?id=${p.id}" class="product-card"><div class="product-img"><img src="${p.image}"></div><div class="product-brand">${p.brand}</div><div class="product-title">${p.name}</div><div class="flex-between"><div class="price-row">${p.hasDiscount ? `<span class="product-price">₨ ${formatPrice(p.finalPrice)}</span><span class="original-price">₨ ${formatPrice(p.price)}</span>` : `<span class="product-price">₨ ${formatPrice(p.finalPrice)}</span>`}</div>${p.hasDiscount ? `<div class="discount-badge">-${p.discountPercent}% OFF</div>` : ''}</div><div class="delivery-info">${p.fastDelivery ? '<span class="fast-delivery">⚡ Fast Delivery</span>' : '<span class="express-delivery">📦 Express Delivery</span>'}</div><div class="rating">${'⭐'.repeat(Math.floor(p.rating))} ${p.rating} <span>· ${p.battery} | ${p.anc === 'Yes' ? '🎧 ANC' : '🔊 Standard'}</span></div></a>`).join('');
+        }
+        
+        function updateAndRender(){ render(); }
+        function syncBrands(){ activeBrands.clear(); brandCheckboxes.forEach(cb => { if(cb.checked) activeBrands.add(cb.value); }); updateAndRender(); }
+        function syncBattery(){ activeBattery.clear(); batteryCheckboxes.forEach(cb => { if(cb.checked) activeBattery.add(cb.value); }); updateAndRender(); }
+        function syncAnc(){ activeAnc.clear(); ancCheckboxes.forEach(cb => { if(cb.checked) activeAnc.add(cb.value); }); updateAndRender(); }
+        function applyPriceFilter(){ let minR = minPriceInput.value.trim(), maxR = maxPriceInput.value.trim(); priceMin = minR === "" ? null : parseFloat(minR); priceMax = maxR === "" ? null : parseFloat(maxR); updateAndRender(); }
+        function resetAllFilters(){ document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false); activeBrands.clear(); activeBattery.clear(); activeAnc.clear(); minPriceInput.value = ""; maxPriceInput.value = ""; priceMin = null; priceMax = null; currentSearchQuery = ""; searchInput.value = ""; currentSort = "popularity"; updateSortUI(); updateAndRender(); }
+        function handleSortClick(e){ const sv = e.currentTarget.getAttribute('data-sort'); if(sv === 'popularity') currentSort = 'popularity'; else if(sv === 'price_asc') currentSort = 'price_asc'; else if(sv === 'price_desc') currentSort = 'price_desc'; updateSortUI(); updateAndRender(); }
+        
+        brandCheckboxes.forEach(cb => cb.addEventListener('change', syncBrands));
+        batteryCheckboxes.forEach(cb => cb.addEventListener('change', syncBattery));
+        ancCheckboxes.forEach(cb => cb.addEventListener('change', syncAnc));
+        priceApplyBtn.addEventListener('click', applyPriceFilter);
+        resetFiltersBtn.addEventListener('click', resetAllFilters);
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', e => { if(e.key === 'Enter') performSearch(); });
+        sortBtns.forEach(btn => btn.addEventListener('click', handleSortClick));
+        render();
+    </script>
+</body>
+</html>
